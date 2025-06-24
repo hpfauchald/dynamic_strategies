@@ -519,11 +519,9 @@ def get_fixed_month_end_dates(df, window_size=21):
 #     return scaled_var
 
 
-import numpy as np
 import time
 import os
 from pathlib import Path
-import pandas as pd
 import cvxpy as cp
 
 def simulate_regime_vol_with_jumps(
@@ -603,7 +601,7 @@ def drawdown(P):
 
 
 
-def stats(R_ts, Rebalancing):
+def stats_sim(R_ts, Rebalancing):
     """
     Computes key performance metrics for a return series:
     - Arithmetic Sharpe ratio
@@ -814,9 +812,9 @@ def kelly(
     monthly_long = P[step::step] / P[:-step:step] - 1
 
     # 7) Stats
-    sl, gsl, wl, dl = stats(monthly_long, Rebalancing)
-    sk, gsk, wk, dk = stats(Rp, Rebalancing)
-    sv, gsv, wv, dv = stats(RvolT, Rebalancing)
+    sl, gsl, wl, dl = stats_sim(monthly_long, Rebalancing)
+    sk, gsk, wk, dk = stats_sim(Rp, Rebalancing)
+    sv, gsv, wv, dv = stats_sim(RvolT, Rebalancing)
 
 
     results = {
