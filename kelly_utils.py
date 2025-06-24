@@ -260,9 +260,24 @@ def kelly(
     # 4) Levels 
     P = np.exp(p)
     
-    # Weights
+    # (Fractional) Kelly Weights
     w = np.clip(f * (E_R / E_R2), min_leverage, max_leverage)
-    w_volTarget = np.clip(np.mean(vol) / vol, min_leverage, max_leverage)
+
+    # Volatility Targeting weights
+    vol_pred = np.sqrt(E_R2)
+
+    # Step 1: Compute raw volatility-targeting weights
+    mean_vol = np.mean(vol)
+    w_volTarget = mean_vol / vol_pred
+
+    vol_xs_returns = R * w_volTarget
+
+    benchmark_std = np.std(R, ddof=1)
+    strategy_std = np.std(vol_xs_returns, ddof=1)
+    scaling = benchmark_std / strategy_std
+    w_volTarget *= scaling
+
+    w_volTarget = np.clip(w_volTarget, min_leverage, max_leverage)
 
     w = np.asarray(w)
     w_volTarget = np.asarray(w_volTarget)
